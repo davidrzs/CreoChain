@@ -7,10 +7,10 @@ import (
 )
 
 // InitializeDatabase ..
-func InitializeDatabase() *bolt.DB {
+func InitializeDatabase(databaseName string) *bolt.DB {
 	// Open the my.db data file in your current directory.
 	// It will be created if it doesn't exist.
-	db, err := bolt.Open("my.db", 0600, nil)
+	db, err := bolt.Open(databaseName, 0600, nil)
 	fmt.Print(db)
 	if err != nil {
 		log.Fatal(err)
@@ -19,8 +19,16 @@ func InitializeDatabase() *bolt.DB {
 	return db
 }
 
-func CreateBucket(db *bolt.DB, bucket string, key string, value string) error {
-	return nil
+//CreateBucket creates a bucket with the supplied name in the supplied database.
+func CreateBucket(db *bolt.DB, bucket string) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("MyBucket"))
+		if err != nil {
+			return fmt.Errorf("create bucket: %s", err)
+		}
+		return nil
+	})
+	return err
 }
 
 //AddToStore stores a key and value in a bucket in a database. It returns an error if someting goes wrong.

@@ -3,37 +3,34 @@ package main
 import (
 	"../chain"
 	//"../server"
-	"fmt"
 	bolt "github.com/coreos/bbolt"
+
+	"fmt"
 )
 
+const (
+	version            = "v0.1"
+	metaInfoBucketName = "metainfobucket"
+	chainBucketName    = "chainbucket"
+	databaseName       = "creoDB"
+)
+
+func initializePersistence() *bolt.DB {
+	db := chain.InitializeDatabase(databaseName)
+
+	err1 := chain.CreateBucket(db, metaInfoBucketName)
+	err2 := chain.CreateBucket(db, chainBucketName)
+
+	if err1 != nil || err2 != nil {
+		panic("error ocurred while creating buckets")
+	}
+	return db
+}
+
 func main() {
-	db := chain.InitializeDatabase()
-	defer db.Close() //remember to close it at the end
+	db := initializePersistence()
+	defer db.Close() //remember to close it at the end of program execution
 	//server.Serve()
 	fmt.Println("Up and running")
-	db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("MyBucket"))
-		if err != nil {
-			return fmt.Errorf("create bucket: %s", err)
-		}
-		return nil
-	})
-
-	db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("MyBucket"))
-		err := b.Put([]byte("answer"), []byte("42"))
-		fmt.Print("in here")
-		return err
-	})
-
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("MyBucket"))
-		v := b.Get([]byte("answer"))
-		fmt.Printf("The answer is: %s\n", v)
-		return nil
-	})
-
-	fmt.Println("hello")
 
 }

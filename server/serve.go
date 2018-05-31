@@ -33,6 +33,8 @@ func main() {
 	// add a single block to the end of a blockchain
 	e.POST("/v1/chain/:chainid/checkblockhash", addBlockToChain)
 
+	e.POST("/v1/chain/:chainid/checkblockhash", addBlockToChain)
+
 	e.Logger.Fatal(e.Start(":1235"))
 }
 

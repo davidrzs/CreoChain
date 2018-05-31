@@ -2,7 +2,8 @@ package chain
 
 import "fmt"
 
-func test() {
+//Test ...
+func Test() {
 	bc := NewBlockchain()
 
 	bc.AddBlock("Send 1 BTC to Ivan")

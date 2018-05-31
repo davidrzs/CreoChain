@@ -32,5 +32,6 @@ func main() {
 	defer db.Close() //remember to close it at the end of program execution
 	//server.Serve()
 	fmt.Println("Up and running")
+	chain.Test()
 
 }

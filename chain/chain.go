@@ -4,6 +4,7 @@ package chain
 
 // Blockchain keeps a sequence of Blocks
 type Blockchain struct {
+	name   string
 	blocks []*Block
 }
 
@@ -15,6 +16,10 @@ func (bc *Blockchain) AddBlock(data string) {
 }
 
 // NewBlockchain creates a new Blockchain with genesis Block
-func NewBlockchain() *Blockchain {
-	return &Blockchain{[]*Block{NewGenesisBlock()}}
+func NewBlockchain(name string) *Blockchain {
+	return &Blockchain{name, []*Block{NewGenesisBlock()}}
+}
+
+func SaveBlock() {
+
 }

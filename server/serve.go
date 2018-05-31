@@ -1,49 +1,47 @@
 package server
 
 import (
-	"github.com/kataras/iris"
-
-	"github.com/kataras/iris/middleware/logger"
-	"github.com/kataras/iris/middleware/recover"
+	"github.com/labstack/echo"
+	"net/http"
+	"strconv"
 )
 
-// Serve starts the server in order to accept requests.
-func Serve() {
-	app := iris.New()
-	// make sure we handle an error
-	app.OnErrorCode(iris.StatusNotFound, notFoundHandler)
-	app.Logger().SetLevel("debug")
-	// Optionally, add two built'n handlers
-	// that can recover from any http-relative panics
-	// and log the requests to the terminal.
-	app.Use(recover.New())
-	app.Use(logger.New())
+/*
+# General Comments:
 
-	// Method:   GET
-	// Resource: http://localhost:8080
-	app.Handle("GET", "/", func(ctx iris.Context) {
-		ctx.HTML("<h1>Welcome</h1>")
+We have a versioned API -> we are currently v1
+*/
+
+func main() {
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	// same as app.Handle("GET", "/ping", [...])
-	// Method:   GET
-	// Resource: http://localhost:8080/ping
-	app.Get("/ping", func(ctx iris.Context) {
-		ctx.WriteString("pong")
-	})
+	// get the fullchain in JSON format
+	e.GET("/v1/chain/:chainid/fullchain", fullChain)
 
-	// Method:   GET
-	// Resource: http://localhost:8080/hello
-	app.Get("/hello", func(ctx iris.Context) {
-		ctx.JSON(iris.Map{"message": "Hello Iris!", "toll": 12})
-	})
+	// get a specific block in JSON format
+	e.GET("/v1/chain/:chainid/sb/:blockid", singleBlock)
 
-	// http://localhost:8080
-	// http://localhost:8080/ping
-	// http://localhost:8080/hello
-	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
+	// recalculate all hashes in a chain and verify if they match the ones stored
+	e.GET("/v1/chain/:chainid/checkchainhashes", checkHashesChain)
+
+	// check the hash of a single block
+	e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
+
+	// add a single block to the end of a blockchain
+	e.POST("/v1/chain/:chainid/checkblockhash", addBlockToChain)
+
+	e.Logger.Fatal(e.Start(":1235"))
 }
 
-func notFoundHandler(ctx iris.Context) {
-	ctx.HTML("Custom route for 404 not found http code, here you can render a view, html, json <b>any valid response</b>.")
+func fullChain(c echo.Context) error {
+	// User ID from path `users/:id`
+	id, err1 := strconv.Atoi(c.Param("chainid"))
+	if err1 != nil {
+		return c.String(http.StatusInternalServerError, "Internal Server Error")
+	}
+	u := "hello"
+	return c.JSON(http.StatusOK, u)
 }

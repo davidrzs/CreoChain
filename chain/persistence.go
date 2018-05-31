@@ -1,48 +1,45 @@
 package chain
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"reflect"
+	"fmt"
+	bolt "github.com/coreos/bbolt"
+	"log"
 )
 
-type Product struct {
-	gorm.Model
-	Code  string
-	Price uint
+// InitializeDatabase ..
+func InitializeDatabase() *bolt.DB {
+	// Open the my.db data file in your current directory.
+	// It will be created if it doesn't exist.
+	db, err := bolt.Open("my.db", 0600, nil)
+	fmt.Print(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return db
 }
 
-// InitializeDatabase creates the database if it doesn't exist and migrates the schema.
-func InitializeDatabase() {
-	db, err := gorm.Open("sqlite3", "../test.db")
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	fmt.Print(reflect.TypeOf(db))
+func CreateBucket(db *bolt.DB, bucket string, key string, value string) error {
+	return nil
 }
 
-func main() {
-	db, err := gorm.Open("sqlite3", "../test.db")
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
+//AddToStore stores a key and value in a bucket in a database. It returns an error if someting goes wrong.
+func AddToStore(db *bolt.DB, bucket string, key string, value string) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(bucket))
+		err := b.Put([]byte(key), []byte(value))
+		return err
+	})
+	return err
+}
 
-	// Migrate the schema
-	db.AutoMigrate(&Product{})
-
-	// Create
-	db.Create(&Product{Code: "L1212", Price: 1000})
-
-	// Read
-	var product Product
-	db.First(&product, 1)                   // find product with id 1
-	db.First(&product, "code = ?", "L1212") // find product with code l1212
-
-	// Update - update product's price to 2000
-	db.Model(&product).Update("Price", 2000)
-
-	// Delete - delete product
-	db.Delete(&product)
+//RetrieveFromStore retrieves a value for a given key in a bucket in a database. It returns an error if someting goes wrong.
+func RetrieveFromStore(db *bolt.DB, bucket string, key string) (string, error) {
+	var v string
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(bucket))
+		v = string(b.Get([]byte(key)))
+		return nil
+	})
+	return v, err
 }

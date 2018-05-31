@@ -3,12 +3,23 @@ package chain
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"reflect"
 )
 
 type Product struct {
 	gorm.Model
 	Code  string
 	Price uint
+}
+
+// InitializeDatabase creates the database if it doesn't exist and migrates the schema.
+func InitializeDatabase() {
+	db, err := gorm.Open("sqlite3", "../test.db")
+	if err != nil {
+		panic("failed to connect database")
+	}
+	defer db.Close()
+	fmt.Print(reflect.TypeOf(db))
 }
 
 func main() {

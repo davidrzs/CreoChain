@@ -3,6 +3,20 @@ package chain
 import "fmt"
 
 //Test ...
+
+// CheckIfChainExists checks if a chain with a given name can be found in our database
+func CheckIfChainExists(name string) bool {
+	return false
+}
+
+func GetWholeChain(name string) *Blockchain {
+	return nil
+}
+
+func GetBlockOfChain() *Block {
+	return nil
+}
+
 func Test() {
 	bc := NewBlockchain("test")
 

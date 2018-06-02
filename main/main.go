@@ -12,7 +12,7 @@ const (
 	version            = "v0.1"
 	metaInfoBucketName = "metainfobucket"
 	chainBucketName    = "chainbucket"
-	databaseName       = "creoDB"
+	databaseName       = "creoDB.db"
 )
 
 func initializePersistence() *bolt.DB {

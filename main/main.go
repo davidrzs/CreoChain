@@ -2,7 +2,7 @@ package main
 
 import (
 	"../chain"
-	//"../server"
+	"../server"
 	bolt "github.com/coreos/bbolt"
 
 	"fmt"
@@ -14,6 +14,12 @@ const (
 	chainBucketName    = "chainbucket"
 	databaseName       = "creoDB.db"
 )
+
+// ServerManager stores all relevant data of our runtime
+type ServerManager struct {
+	name        string
+	blockChains map[string]*chain.Blockchain
+}
 
 func initializePersistence() *bolt.DB {
 	db := chain.InitializeDatabase(databaseName)
@@ -28,10 +34,22 @@ func initializePersistence() *bolt.DB {
 }
 
 func main() {
+	// begin database initialization
 	db := initializePersistence()
 	defer db.Close() //remember to close it at the end of program execution
-	//server.Serve()
+	// end database initialization
+
+	// begin variable assignment and reading in from database
+	Data := &ServerManager{name: "main dataset", blockChains: make(map[string]*chain.Blockchain)}
+	// end variable assignment and reading in from database
+
+	// begin server
+	server.Serve()
+	//end server
+
+	// begin debugging
 	fmt.Println("Up and running")
 	chain.Test()
+	// end debugging
 
 }

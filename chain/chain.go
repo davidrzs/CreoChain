@@ -4,8 +4,9 @@ package chain
 
 // Blockchain keeps a sequence of Blocks
 type Blockchain struct {
-	name   string
-	blocks []*Block
+	name        string
+	accessToken string
+	blocks      []*Block
 }
 
 // AddBlock saves provided data as a block in the blockchain

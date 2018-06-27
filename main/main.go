@@ -15,12 +15,6 @@ const (
 	databaseName       = "creoDB.db"
 )
 
-// ServerManager stores all relevant data of our runtime
-type ServerManager struct {
-	name        string
-	blockChains map[string]*chain.Blockchain
-}
-
 func initializePersistence() *bolt.DB {
 	db := chain.InitializeDatabase(databaseName)
 
@@ -40,16 +34,17 @@ func main() {
 	// end database initialization
 
 	// begin variable assignment and reading in from database
-	Data := &ServerManager{name: "main dataset", blockChains: make(map[string]*chain.Blockchain)}
+	Data := &chain.ServerManager{Name: "main dataset", BlockChains: make(map[string]*chain.Blockchain)}
 	// end variable assignment and reading in from database
-
-	// begin server
-	server.Serve()
-	//end server
 
 	// begin debugging
 	fmt.Println("Up and running")
 	chain.Test()
+	Data.BlockChains["test"] = chain.NewBlockchain("test")
 	// end debugging
+
+	// begin server
+	server.Serve(Data)
+	//end server
 
 }

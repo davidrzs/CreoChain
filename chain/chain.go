@@ -18,7 +18,7 @@ func (bc *Blockchain) AddBlock(data string) {
 
 // NewBlockchain creates a new Blockchain with genesis Block
 func NewBlockchain(name string) *Blockchain {
-	return &Blockchain{name, []*Block{NewGenesisBlock()}}
+	return &Blockchain{name, "", []*Block{NewGenesisBlock()}}
 }
 
 func SaveBlock() {

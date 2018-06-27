@@ -4,16 +4,16 @@ package chain
 
 // Blockchain keeps a sequence of Blocks
 type Blockchain struct {
-	name        string
+	Name        string
 	accessToken string
-	blocks      []*Block
+	Blocks      []*Block
 }
 
 // AddBlock saves provided data as a block in the blockchain
 func (bc *Blockchain) AddBlock(data string) {
-	prevBlock := bc.blocks[len(bc.blocks)-1]
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
 	newBlock := NewBlock(data, prevBlock.Hash)
-	bc.blocks = append(bc.blocks, newBlock)
+	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
 // NewBlockchain creates a new Blockchain with genesis Block

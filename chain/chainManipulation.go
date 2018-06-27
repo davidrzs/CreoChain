@@ -17,7 +17,7 @@ func GetWholeChain(name string) *Blockchain {
 
 // GetBlockOfChainByID gets a specific block of a specific chain
 func GetBlockOfChainByID(chain *Blockchain, sindex int) *Block {
-	for index, block := range chain.blocks {
+	for index, block := range chain.Blocks {
 		if index == sindex {
 			return block
 		}
@@ -27,7 +27,7 @@ func GetBlockOfChainByID(chain *Blockchain, sindex int) *Block {
 
 // GetBlockOfChainByContent returns a block containing a certain string in its data
 func GetBlockOfChainByContent(chain *Blockchain, hash string) *Block {
-	for _, block := range chain.blocks { /* this method should be checkd for correctness */
+	for _, block := range chain.Blocks { /* this method should be checkd for correctness */
 		hashstring := string(block.Hash[:])
 		if hashstring == hash {
 			return block
@@ -38,7 +38,7 @@ func GetBlockOfChainByContent(chain *Blockchain, hash string) *Block {
 
 // GetBlockOfChainByHash returns the block corresponding to a hash
 func GetBlockOfChainByHash(chain *Blockchain, search string) *Block {
-	for _, block := range chain.blocks {
+	for _, block := range chain.Blocks {
 		datastring := string(block.Data[:])
 		if strings.Contains(datastring, search) {
 			return block
@@ -69,7 +69,7 @@ func Test() {
 	bc.AddBlock("Send 1 BTC to Ivan")
 	bc.AddBlock("Send 2 more BTC to Ivan")
 
-	for _, block := range bc.blocks {
+	for _, block := range bc.Blocks {
 		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
 		fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("Hash: %x\n", block.Hash)

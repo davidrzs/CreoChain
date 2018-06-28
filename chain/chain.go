@@ -20,7 +20,3 @@ func (bc *Blockchain) AddBlock(data string) {
 func NewBlockchain(name string) *Blockchain {
 	return &Blockchain{name, "", []*Block{NewGenesisBlock()}}
 }
-
-func SaveBlock() {
-
-}

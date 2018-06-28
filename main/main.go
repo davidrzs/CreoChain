@@ -41,6 +41,11 @@ func main() {
 	fmt.Println("Up and running")
 	chain.Test()
 	Data.BlockChains["test"] = chain.NewBlockchain("test")
+	Data.BlockChains["test"].AddBlock("Send 2 more BTC to Ivan")
+
+	Data.BlockChains["test"].AddBlock("Hello, this is me")
+	Data.BlockChains["test"].AddBlock("another one")
+
 	// end debugging
 
 	// begin server

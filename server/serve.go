@@ -108,7 +108,7 @@ func Serve(data *chain.ServerManager) {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
 		u := new(BlockAdder)
-
+		fmt.Println(u.Content)
 		if err = c.Bind(u); err != nil {
 			return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied.")
 		}

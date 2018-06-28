@@ -31,16 +31,6 @@ type BlockAdder struct {
 	Authentication string
 }
 
-// AreByteArraysEqual checks if two byte arrays are equal.
-func AreByteArraysEqual(a []byte, b []byte) bool {
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
 /*
 # General Comments:
 
@@ -61,7 +51,7 @@ func Serve(data *chain.ServerManager) {
 	})
 
 	// get the fullchain in JSON format of a non pretected chain
-	e.GET("/v1/chain/:chainname/fullchain", func(c echo.Context) error {
+	e.GET("/v1/chain/:chainname/", func(c echo.Context) error {
 		chain, isPresent := data.BlockChains[c.Param("chainname")]
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
@@ -71,7 +61,7 @@ func Serve(data *chain.ServerManager) {
 	})
 
 	// get a specific block in JSON format
-	e.GET("/v1/chain/:chainname/sb/:blockid", func(c echo.Context) error {
+	e.GET("/v1/chain/:chainname/block/:blockid", func(c echo.Context) error {
 		chain, isPresent := data.BlockChains[c.Param("chainname")]
 		blockid, err := strconv.Atoi(c.Param("blockid"))
 		if !isPresent {
@@ -101,7 +91,7 @@ func Serve(data *chain.ServerManager) {
 			fmt.Println(block)
 			origHash := block.Hash
 			newHash := chain.GetHash(block)
-			currentDiscrepancy := !AreByteArraysEqual(newHash, origHash)
+			currentDiscrepancy := newHash == origHash
 			if currentDiscrepancy == true {
 				discrepancyid = idx
 				discrepancy = true

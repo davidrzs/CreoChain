@@ -1,7 +1,6 @@
 package server
 
 import (
-	b64 "encoding/base64"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -100,7 +99,7 @@ func Serve(data *chain.ServerManager) {
 			newHash := chain.GetHash(block)
 			currentDiscrepancy := !AreByteArraysEqual(newHash, origHash)
 
-			ck := SingleHashCheck{hash1: string(origHash[:]), hash2: b64.StdEncoding.EncodeToString(newHash[:]), same: currentDiscrepancy}
+			ck := SingleHashCheck{hash1: string(origHash[:]), hash2: string(newHash[:]), same: currentDiscrepancy}
 			fmt.Println(ck)
 			listOfHashChecks = append(listOfHashChecks, ck)
 			if currentDiscrepancy == true {

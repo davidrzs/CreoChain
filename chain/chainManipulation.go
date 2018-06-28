@@ -6,15 +6,6 @@ import (
 	"strings"
 )
 
-// CheckIfChainExists checks if a chain with a given name can be found in our database
-func CheckIfChainExists(name string) bool {
-	return false
-}
-
-// GetWholeChain returns a pointer to a blockchain loaded from the storage.
-func GetWholeChain(name string) *Blockchain {
-	return nil
-}
 
 // GetBlockOfChainByID gets a specific block of a specific chain
 func GetBlockOfChainByID(chain *Blockchain, sindex int) *Block {

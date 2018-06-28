@@ -1,11 +1,11 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"runtime"
 	"strconv"
-	"strings"
 
 	"../chain"
 	"github.com/labstack/echo"
@@ -38,29 +38,19 @@ func Serve(data *chain.ServerManager) {
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
-		var jsonString strings.Builder
 
 		/*{"employees":[
 		    { "firstName":"John", "lastName":"Doe" },
 		    { "firstName":"Anna", "lastName":"Smith" },
 		    { "firstName":"Peter", "lastName":"Jones" }
 		]}*/
-		buffer.WriteString("'blocks': [ \n")
-		for _, block := range chain.Blocks {
-			buffer.WriteString("{'prevBlockHash':'")
-			buffer.WriteString(block.PrevBlockHash)
-			buffer.WriteString("{'prevBlockHash':'")
-
-			fmt.Printf("Data: %s\n", block.Data)
-			fmt.Printf("Hash: %x\n", block.Hash)
-			fmt.Println()
-		}
-		buffer.WriteString("]")
+		js, err := json.Marshal(chain)
 
 		if err != nil {
 			return c.String(http.StatusInternalServerError, "Error 500. JSON marshalling didn't work.")
 		}
-		return c.JSON(http.StatusOK, buffer.String())
+		fmt.Print(string(js))
+		return c.JSON(http.StatusOK, &chain)
 	})
 
 	/*

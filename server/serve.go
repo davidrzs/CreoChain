@@ -1,8 +1,6 @@
 package server
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -39,24 +37,28 @@ func Serve(data *chain.ServerManager) {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
 
-		/*{"employees":[
-		    { "firstName":"John", "lastName":"Doe" },
-		    { "firstName":"Anna", "lastName":"Smith" },
-		    { "firstName":"Peter", "lastName":"Jones" }
-		]}*/
-		js, err := json.Marshal(chain)
-
-		if err != nil {
-			return c.String(http.StatusInternalServerError, "Error 500. JSON marshalling didn't work.")
-		}
-		fmt.Print(string(js))
 		return c.JSON(http.StatusOK, &chain)
 	})
 
-	/*
-		// get a specific block in JSON format
-		e.GET("/v1/chain/:chainid/sb/:blockid", singleBlock)
+	// get a specific block in JSON format
+	e.GET("/v1/chain/:chainname/sb/:blockid", func(c echo.Context) error {
+		chain, isPresent := data.BlockChains[c.Param("chainname")]
+		blockid, err := strconv.Atoi(c.Param("blockid"))
+		if !isPresent {
+			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
+		}
 
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Error 500. Couln't parse block id.")
+		}
+
+		if len(chain.Blocks) < blockid {
+			return c.String(http.StatusInternalServerError, "Error 500. The block id index exceeds the number of elements in the blockchain")
+		}
+
+		return c.JSON(http.StatusOK, &chain.Blocks[blockid])
+	})
+	/*
 		// recalculate all hashes in a chain and verify if they match the ones stored
 		e.GET("/v1/chain/:chainid/checkchainhashes", checkHashesChain)
 

@@ -22,7 +22,6 @@ type SingleHashCheck struct {
 //HashResult is the struct we return as json when we check all hashes.
 type HashResult struct {
 	HashesOk      bool
-	Details       *[]SingleHashCheck
 	DiscrepancyID int
 }
 
@@ -92,32 +91,38 @@ func Serve(data *chain.ServerManager) {
 		}
 		discrepancy := false
 		discrepancyid := 0
-		var listOfHashChecks []SingleHashCheck
 		for idx, block := range bchain.Blocks {
 			fmt.Println(block)
 			origHash := block.Hash
 			newHash := chain.GetHash(block)
 			currentDiscrepancy := !AreByteArraysEqual(newHash, origHash)
-
-			ck := SingleHashCheck{hash1: string(origHash[:]), hash2: string(newHash[:]), same: currentDiscrepancy}
-			fmt.Println(ck)
-			listOfHashChecks = append(listOfHashChecks, ck)
 			if currentDiscrepancy == true {
 				discrepancyid = idx
 				discrepancy = true
 			}
 		}
-
-		return c.JSON(http.StatusOK, &HashResult{HashesOk: !discrepancy,
-			Details: &listOfHashChecks, DiscrepancyID: discrepancyid})
+		ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
+		return c.JSON(http.StatusOK, ret)
 	})
+
+	// add a single block to the end of a blockchain
+	e.POST("/v1/chain/:chainname/addBlock", func(c echo.Context) error {
+		bchain, isPresent := data.BlockChains[c.Param("chainname")]
+		if !isPresent {
+			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
+		}
+		u := new(chain.Block)
+  		if err = c.Bind(u); err != nil {
+    		return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied.")
+  		}
+  return c.JSON(http.StatusOK, u
+		ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
+		return c.JSON(http.StatusOK, ret)
+	})
+
 	/*
 		// check the hash of a single block
 		e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
-
-		// add a single block to the end of a blockchain
-		e.POST("/v1/chain/:chainid/checkblockhash", addBlockToChain)
-
 	*/
 	e.Logger.Fatal(e.Start(":1235"))
 }

@@ -29,6 +29,10 @@ func initializePersistence() *bolt.DB {
 	return db
 }
 
+func cleanup() {
+	close(number)
+}
+
 func main() {
 	// begin database initialization
 	db := initializePersistence()

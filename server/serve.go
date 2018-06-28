@@ -25,6 +25,12 @@ type HashResult struct {
 	DiscrepancyID int
 }
 
+// BlockAdder is a help structure facilitating adding a block to a chain
+type BlockAdder struct {
+	Content        string
+	Authentication string
+}
+
 // AreByteArraysEqual checks if two byte arrays are equal.
 func AreByteArraysEqual(a []byte, b []byte) bool {
 	for i := range a {
@@ -106,18 +112,19 @@ func Serve(data *chain.ServerManager) {
 	})
 
 	// add a single block to the end of a blockchain
-	e.POST("/v1/chain/:chainname/addBlock", func(c echo.Context) error {
+	e.POST("/v1/chain/:chainname/addBlock", func(c echo.Context) (err error) {
 		bchain, isPresent := data.BlockChains[c.Param("chainname")]
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
-		u := new(chain.Block)
-  		if err = c.Bind(u); err != nil {
-    		return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied.")
-  		}
-  return c.JSON(http.StatusOK, u
-		ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
-		return c.JSON(http.StatusOK, ret)
+		u := new(BlockAdder)
+
+		if err = c.Bind(u); err != nil {
+			return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied.")
+		}
+		bchain.AddBlock(u.Content)
+
+		return c.String(http.StatusInternalServerError, "yaa")
 	})
 
 	/*

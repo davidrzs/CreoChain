@@ -2,6 +2,7 @@ package chain
 
 import (
 	"fmt"
+
 	"strings"
 )
 
@@ -52,19 +53,10 @@ func StoreBlockChain(chain *Blockchain, name string) error {
 	return nil
 }
 
-//AddBlockToChain ..
-func AddBlockToChain() error {
-	return nil
-}
-
-// DeleteBlockChain deletes an entire blockchain from the database. Use with caution.
-func DeleteBlockChain(name string) error {
-	return nil
-}
 
 //Test ...
 func Test() {
-	bc := NewBlockchain("test")
+	bc := NewBlockchain("test", "")
 
 	bc.AddBlock("Send 1 BTC to Ivan")
 	bc.AddBlock("Send 2 more BTC to Ivan")

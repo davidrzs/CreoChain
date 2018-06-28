@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sync"
+
 	"../chain"
 	"../server"
 	bolt "github.com/coreos/bbolt"
@@ -34,18 +36,17 @@ func main() {
 	// end database initialization
 
 	// begin variable assignment and reading in from database
-	Data := &chain.ServerManager{Name: "main dataset", BlockChains: make(map[string]*chain.Blockchain)}
+	Data := &chain.ServerManager{Mutex: &sync.Mutex{}, Name: "main dataset", BlockChains: make(map[string]*chain.Blockchain)}
 	// end variable assignment and reading in from database
 
 	// begin debugging
 	fmt.Println("Up and running")
 	chain.Test()
-	Data.BlockChains["test"] = chain.NewBlockchain("test")
+	Data.BlockChains["test"] = chain.NewBlockchain("test", "autheR3")
 	Data.BlockChains["test"].AddBlock("Send 2 more BTC to Ivan")
 
 	Data.BlockChains["test"].AddBlock("Hello, this is me")
 	Data.BlockChains["test"].AddBlock("another one")
-
 	// end debugging
 
 	// begin server

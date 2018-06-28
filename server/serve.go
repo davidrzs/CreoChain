@@ -102,19 +102,22 @@ func Serve(data *chain.ServerManager) {
 	})
 
 	// add a single block to the end of a blockchain
-	e.POST("/v1/chain/:chainname/addBlock", func(c echo.Context) (err error) {
-		bchain, isPresent := data.BlockChains[c.Param("chainname")]
-		if !isPresent {
+	e.POST("/v1/chain/:chainname/new", func(c echo.Context) (err error) {
+		bchain, isbPresent := data.BlockChains[c.Param("chainname")]
+		if !isbPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
 		u := new(BlockAdder)
 		fmt.Println(u.Content)
 		if err = c.Bind(u); err != nil {
-			return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied.")
+			return c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied. \n Couldn't parse it correctly. \n Please consult the documentation or report a bug.")
 		}
-		bchain.AddBlock(u.Content)
+		if u.Authentication == bchain.AccessToken {
+			bchain.AddBlock(u.Content)
+			return c.String(http.StatusOK, "Success! Block Added")
+		}
 
-		return c.String(http.StatusInternalServerError, "yaa")
+		return c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded")
 	})
 
 	/*

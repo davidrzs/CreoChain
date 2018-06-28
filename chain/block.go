@@ -5,6 +5,7 @@ package chain
 import (
 	"bytes"
 	"crypto/sha256"
+	b64 "encoding/base64"
 	"strconv"
 	"time"
 )
@@ -27,7 +28,7 @@ func GetHash(b *Block) string {
 	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
 	headers := bytes.Join([][]byte{[]byte(b.PrevBlockHash), []byte(b.Data), timestamp}, []byte{})
 	hash := sha256.Sum256(headers)
-	return string(hash[:])
+	return b64.StdEncoding.EncodeToString(hash[:])
 }
 
 // NewBlock creates and returns Block

@@ -52,17 +52,24 @@ func Serve(data *chain.ServerManager) {
 
 	// get the fullchain in JSON format of a non pretected chain
 	e.GET("/v1/chain/:chainname/", func(c echo.Context) error {
+		data.Mutex.Lock()
 		chain, isPresent := data.BlockChains[c.Param("chainname")]
+		defer data.Mutex.Unlock()
+
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 		}
 
 		return c.JSON(http.StatusOK, &chain)
+
 	})
 
 	// get a specific block in JSON format
 	e.GET("/v1/chain/:chainname/block/:blockid", func(c echo.Context) error {
+		data.Mutex.Lock()
 		chain, isPresent := data.BlockChains[c.Param("chainname")]
+		defer data.Mutex.Unlock()
+
 		blockid, err := strconv.Atoi(c.Param("blockid"))
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
@@ -81,6 +88,9 @@ func Serve(data *chain.ServerManager) {
 
 	// recalculate all hashes in a chain and verify if they match the ones stored
 	e.GET("/v1/chain/:chainname/checkchainhashes", func(c echo.Context) error {
+		data.Mutex.Lock()
+		defer data.Mutex.Unlock()
+
 		bchain, isPresent := data.BlockChains[c.Param("chainname")]
 		if !isPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
@@ -103,6 +113,9 @@ func Serve(data *chain.ServerManager) {
 
 	// add a single block to the end of a blockchain
 	e.POST("/v1/chain/:chainname/new", func(c echo.Context) (err error) {
+		data.Mutex.Lock()
+		defer data.Mutex.Unlock()
+
 		bchain, isbPresent := data.BlockChains[c.Param("chainname")]
 		if !isbPresent {
 			return c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")

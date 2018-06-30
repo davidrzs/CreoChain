@@ -1,16 +1,19 @@
 # Dependencies
 markdown:         redcarpet
-highlighter:      pygments
+highlighter:      rouge
 
 # Permalinks
 permalink:        pretty
 
 # Setup
-title:            Block+
-tagline:          'A customizable blockchain'
+title:            CreoChain
+tagline:          'An easy to use non distributed blockchain server'
 description:      'A blockchain designed to be easily customizable and simple to use for a wide variety of use cases. Made with love by <a href="https://github.com/davidrzs/" target="_blank">davidrzs</a>.'
 url:              http://hyde.getpoole.com
 baseurl:          /
+
+plugins:
+  - jekyll-sitemap
 
 author:
   name:           'davidrz'
@@ -19,6 +22,3 @@ author:
 
 # Custom vars
 version:          0.1.1
-
-github:
-  repo:           https://github.com/poole/hyde

@@ -1,8 +1,12 @@
 ---
-layout: page
-title: Home
+layout: default
 ---
+<h1 class="hasSubtitle">CreoChain</h1>
+<h2 class="subtitle">The Easily Programmable Blockchain Server</h2>
+<br><br>
 
+
+**Welcome to the CreoChain project**. CreoChain is a 
 <p class="message">
   Thank you for your interest. This project is still at a very early stage. It is intended for personal use and should NEVER be used where security is your primary concern.
 </p>
@@ -15,6 +19,15 @@ There are currently two themes built on Poole:
 * [Lanyon](http://lanyon.getpoole.com)
 
 Learn more and contribute on [GitHub](https://github.com/poole).
+
+
+```go
+fmt.Println(12)
+
+func main(){
+  return 12
+}
+```
 
 ## Setup
 

@@ -1,5 +1,7 @@
 ---
 layout: default
+title: CreoChain
+subtitle: The Easily Programmable Blockchain Server
 ---
 <h1 class="hasSubtitle">CreoChain</h1>
 <h2 class="subtitle">The Easily Programmable Blockchain Server</h2>

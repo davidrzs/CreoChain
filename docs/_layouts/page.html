@@ -3,6 +3,13 @@ layout: default
 ---
 
 <div class="page">
-  <h1 class="page-title">{{ page.title }}</h1>
+ {% if page.subtitle %}
+<h1 class="hasSubtitle">{{page.title}}</h1>
+<h2 class="subtitle">{{page.subtitle}}</h2>
+<br>
+<br>
+ {% else %}
+<h1 class="page-title">{{ page.title }}</h1>
+ {% endif %}
   {{ content }}
 </div>

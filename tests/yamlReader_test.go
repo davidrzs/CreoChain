@@ -7,13 +7,6 @@ import (
 	"../persistence"
 )
 
-var data = `
-a: Easy!
-b:
-  c: 2
-  d: [3, 4]
-`
-
 var yamlString = `
 database: memory
 server:

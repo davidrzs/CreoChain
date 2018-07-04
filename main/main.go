@@ -1,13 +1,15 @@
 package main
 
 import (
+	"os"
 	"sync"
 
+	"fmt"
+
 	"../chain"
+	"../persistence"
 	"../server"
 	bolt "github.com/coreos/bbolt"
-
-	"fmt"
 )
 
 const (
@@ -15,6 +17,13 @@ const (
 	metaInfoBucketName = "metainfobucket"
 	chainBucketName    = "chainbucket"
 	databaseName       = "creoDB.db"
+
+	yamlString = `
+database: keyvalue
+server:
+  authcodes: ["gs123","sadjksad"]
+  usessl: true
+`
 )
 
 func initializePersistence() *bolt.DB {
@@ -29,10 +38,6 @@ func initializePersistence() *bolt.DB {
 	return db
 }
 
-func cleanup() {
-	close(number)
-}
-
 func main() {
 	// begin database initialization
 	db := initializePersistence()
@@ -41,6 +46,12 @@ func main() {
 
 	// begin variable assignment and reading in from database
 	Data := &chain.ServerManager{Mutex: &sync.Mutex{}, Name: "main dataset", BlockChains: make(map[string]*chain.Blockchain)}
+	Config, err := persistence.ParseYAML(yamlString)
+	if err != nil {
+		fmt.Println("An error occurred reading the Yaml file. Please fix this")
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	// end variable assignment and reading in from database
 
 	// begin debugging
@@ -54,7 +65,7 @@ func main() {
 	// end debugging
 
 	// begin server
-	server.Serve(Data)
+	server.Serve(Data, Config)
 	//end server
 
 }

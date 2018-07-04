@@ -2,7 +2,10 @@ package main
 
 import (
 	"os"
+	"os/signal"
 	"sync"
+	"syscall"
+	"time"
 
 	"fmt"
 
@@ -41,7 +44,20 @@ func initializePersistence() *bolt.DB {
 func main() {
 	// begin database initialization
 	db := initializePersistence()
-	defer db.Close() //remember to close it at the end of program execution
+	ticker := time.NewTicker(1 * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				// handling saving to database
+			case <-quit:
+				fmt.Println("Gracefully stopped thread saving to database")
+				ticker.Stop()
+				return
+			}
+		}
+	}()
 	// end database initialization
 
 	// begin variable assignment and reading in from database
@@ -65,7 +81,19 @@ func main() {
 	// end debugging
 
 	// begin server
-	server.Serve(Data, Config)
+	go server.Serve(Data, Config) // running it in another thread
 	//end server
+
+	//beginning shutdown handling
+	var gracefulStop = make(chan os.Signal)
+	signal.Notify(gracefulStop, syscall.SIGTERM)
+	signal.Notify(gracefulStop, syscall.SIGINT)
+	<-gracefulStop
+	close(quit) // closing the database saving channel stopping database access.
+	db.Close()  //remember to close it at the end of program execution
+	fmt.Println("Closing all programs")
+	time.Sleep(2 * time.Second)
+	os.Exit(0)
+	//ending shutdown handling
 
 }

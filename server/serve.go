@@ -18,7 +18,7 @@ func Serve(data *chain.ServerManager, config *persistence.YAMLReader) {
 	var m runtime.MemStats
 	e.GET("/", func(c *gin.Context) {
 		runtime.ReadMemStats(&m)
-		stringToDisplay := WelcomeCreo + "\n" + "\n" + "Current Architecture: " + string(runtime.GOOS) + "\n" + "Current Memory Usage: " + strconv.Itoa(int(bToMb(m.TotalAlloc))) + "Mb" + "\n" + "Check out the documentation at www.1234.com"
+		stringToDisplay := WelcomeCreo + "\n" + "\n" + "Current Architecture: " + string(runtime.GOOS) + "\n" + "Current Memory Usage: " + strconv.Itoa(int(bToMb(m.TotalAlloc))) + "Mb" + "\n" + "Check out the documentation at https://davidrzs.github.io/CreoChain/"
 		c.String(http.StatusOK, stringToDisplay)
 	})
 

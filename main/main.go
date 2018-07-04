@@ -24,7 +24,7 @@ func initializePersistence() *bolt.DB {
 	err2 := chain.CreateBucket(db, chainBucketName)
 
 	if err1 != nil || err2 != nil {
-		panic("error ocurred while creating buckets")
+		panic("error occurred while creating buckets")
 	}
 	return db
 }

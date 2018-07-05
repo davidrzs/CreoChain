@@ -1,9 +1,5 @@
 package chain
 
-import (
-	"fmt"
-)
-
 /*
 // GetBlockOfChainByID gets a specific block of a specific chain
 func GetBlockOfChainByID(chain *Blockchain, sindex int) Block {
@@ -42,17 +38,17 @@ func StoreBlockChain(chain *Blockchain, name string) error {
 	return nil
 }
 */
-//Test ...
-func Test() {
-	bc := NewBlockchain("test", "")
+// //Test ...
+// func Test() {
+// 	bc := NewBlockchain("test", "")
 
-	bc.AddBlock("Send 1 BTC to Ivan")
-	bc.AddBlock("Send 2 more BTC to Ivan")
+// 	bc.AddBlock("Send 1 BTC to Ivan")
+// 	bc.AddBlock("Send 2 more BTC to Ivan")
 
-	for _, block := range bc.Blocks {
-		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %x\n", string(block.Hash))
-		fmt.Println()
-	}
-}
+// 	for _, block := range bc.Blocks {
+// 		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
+// 		fmt.Printf("Data: %s\n", block.Data)
+// 		fmt.Printf("Hash: %x\n", string(block.Hash))
+// 		fmt.Println()
+// 	}
+// }

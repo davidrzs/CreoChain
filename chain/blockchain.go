@@ -1,5 +1,4 @@
 package chain
-package main
 
 import (
 	"bytes"

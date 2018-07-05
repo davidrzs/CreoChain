@@ -7,12 +7,13 @@ import (
 	"strconv"
 
 	"../chain"
+	"../globalvariables"
 	"../persistence"
 	"github.com/gin-gonic/gin"
 )
 
 // Serve fires up the server.
-func Serve(data *chain.ServerManager, config *persistence.YAMLReader) {
+func Serve(data *globalvariables.ServerManager, config *persistence.YAMLReader) {
 	e := gin.Default()
 
 	var m runtime.MemStats

@@ -1,6 +1,6 @@
 // // Taken from https://github.com/Jeiwan/blockchain_go/blob/part_1/block.go
 
-// package chain
+package chain
 
 // import (
 // 	"bytes"

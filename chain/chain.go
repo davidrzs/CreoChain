@@ -1,6 +1,6 @@
 // // taken from https://github.com/Jeiwan/blockchain_go/blob/part_1/blockchain.go
 
-// package chain
+package chain
 
 // import (
 // 	"fmt"

@@ -42,6 +42,10 @@ func initializePersistence() *bolt.DB {
 }
 
 func main() {
+	chain.Tt()
+}
+
+func mmain() {
 	// begin database initialization
 	db := initializePersistence()
 	ticker := time.NewTicker(1 * time.Second)

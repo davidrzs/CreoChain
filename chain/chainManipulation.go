@@ -2,13 +2,11 @@ package chain
 
 import (
 	"fmt"
-
-	"strings"
 )
 
-
+/*
 // GetBlockOfChainByID gets a specific block of a specific chain
-func GetBlockOfChainByID(chain *Blockchain, sindex int) *Block {
+func GetBlockOfChainByID(chain *Blockchain, sindex int) Block {
 	for index, block := range chain.Blocks {
 		if index == sindex {
 			return block
@@ -18,8 +16,8 @@ func GetBlockOfChainByID(chain *Blockchain, sindex int) *Block {
 }
 
 // GetBlockOfChainByContent returns a block containing a certain string in its data
-func GetBlockOfChainByContent(chain *Blockchain, hash string) *Block {
-	for _, block := range chain.Blocks { /* this method should be checkd for correctness */
+func GetBlockOfChainByContent(chain *Blockchain, hash string) Block {
+	for _, block := range chain.Blocks { // this method should be checkd for correctness
 		hashstring := string(block.Hash[:])
 		if hashstring == hash {
 			return block
@@ -29,7 +27,7 @@ func GetBlockOfChainByContent(chain *Blockchain, hash string) *Block {
 }
 
 // GetBlockOfChainByHash returns the block corresponding to a hash
-func GetBlockOfChainByHash(chain *Blockchain, search string) *Block {
+func GetBlockOfChainByHash(chain *Blockchain, search string) Block {
 	for _, block := range chain.Blocks {
 		datastring := string(block.Data[:])
 		if strings.Contains(datastring, search) {
@@ -43,8 +41,7 @@ func GetBlockOfChainByHash(chain *Blockchain, search string) *Block {
 func StoreBlockChain(chain *Blockchain, name string) error {
 	return nil
 }
-
-
+*/
 //Test ...
 func Test() {
 	bc := NewBlockchain("test", "")

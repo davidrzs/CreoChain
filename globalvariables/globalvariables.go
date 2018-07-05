@@ -1,10 +1,14 @@
-package chain
+package globalvariables
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/jinzhu/gorm"
+)
 
 // ServerManager stores all relevant data of our runtime
 type ServerManager struct {
 	Mutex       *sync.Mutex
 	Name        string
-	BlockChains map[string]*Blockchain
+	BlockChains *gorm.DB
 }

@@ -58,72 +58,62 @@ func Serve(Data *globalvariables.ServerManager) {
 		}
 	})
 	/*
-			blockid, err := strconv.Atoi(c.Param("blockid"))
+		// recalculate all hashes in a chain and verify if they match the ones stored
+		e.GET("/v1/chain/:chainname/checkchainhashes", func(c *gin.Context) {
+			data.Mutex.Lock()
+			defer data.Mutex.Unlock()
+
+			bchain, isPresent := data.BlockChains[c.Param("chainname")]
 			if !isPresent {
 				c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
 			}
-
-			if err != nil {
-				c.String(http.StatusInternalServerError, "Error 500. Couln't parse block id.")
+			discrepancy := false
+			discrepancyid := 0
+			for idx, block := range bchain.Blocks {
+				fmt.Println(block)
+				origHash := block.Hash
+				newHash := chain.GetHash(block)
+				currentDiscrepancy := newHash == origHash
+				if currentDiscrepancy == true {
+					discrepancyid = idx
+					discrepancy = true
+				}
 			}
-			fmt.Print(len(chain.Blocks))
-			if len(chain.Blocks)-1 < blockid {
-				c.String(http.StatusInternalServerError, "Error 500. The block id index exceeds the number of elements in the blockchain")
-			}
-
-			c.JSON(http.StatusOK, &chain.Blocks[blockid])
+			ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
+			c.JSON(http.StatusOK, ret)
 		})
-		/*
-			// recalculate all hashes in a chain and verify if they match the ones stored
-			e.GET("/v1/chain/:chainname/checkchainhashes", func(c *gin.Context) {
-				data.Mutex.Lock()
-				defer data.Mutex.Unlock()
-
-				bchain, isPresent := data.BlockChains[c.Param("chainname")]
-				if !isPresent {
-					c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
+	*/
+	// add a single block to the end of a blockchain
+	e.POST("/v1/chain/:chainname/new", func(c *gin.Context) {
+		Data.Mutex.Lock()
+		defer Data.Mutex.Unlock()
+		bblock := chain.Block{}
+		bchain := chain.Chain{}
+		if Data.Database.Where("name = ?", c.Param("chainname")).First(&bchain).RecordNotFound() {
+			c.String(http.StatusNotFound, "Error 404. The chain you wanted to add a block to doesn't exist.")
+		} else {
+			//reading in data
+			ab := AddBlock{}
+			err1 := c.Bind(&ab)
+			if err1 == nil {
+				err2, errString := chain.AddBlockToChain(Data.Database, bchain.Name, ab.Authcode, ab.Data)
+				if err2 == false {
+					//so we were able to add it to the blockchain:
+					c.String(http.StatusOK, "Block Added")
+				} else {
+					// so authorization probably failed
+					c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs")
 				}
-				discrepancy := false
-				discrepancyid := 0
-				for idx, block := range bchain.Blocks {
-					fmt.Println(block)
-					origHash := block.Hash
-					newHash := chain.GetHash(block)
-					currentDiscrepancy := newHash == origHash
-					if currentDiscrepancy == true {
-						discrepancyid = idx
-						discrepancy = true
-					}
-				}
-				ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
-				c.JSON(http.StatusOK, ret)
-			})
+			} else {
+				c.String(http.StatusInternalServerError, err1.Error())
+			}
+		}
 
-			// add a single block to the end of a blockchain
-			e.POST("/v1/chain/:chainname/new", func(c *gin.Context) {
-				data.Mutex.Lock()
-				defer data.Mutex.Unlock()
+	})
 
-				bchain, isbPresent := data.BlockChains[c.Param("chainname")]
-				if !isbPresent {
-					c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
-				}
-				u := new(BlockAdder)
-				fmt.Println(u.Content)
-				if err := c.Bind(u); err != nil {
-					c.String(http.StatusInternalServerError, "Error 500. Something is wrong with the JSON you supplied. \n Couldn't parse it correctly. \n Please consult the documentation or report a bug.")
-				}
-				if u.Authentication == bchain.AccessToken {
-					bchain.AddBlock(u.Content)
-					c.String(http.StatusOK, "Success! Block Added")
-				}
-
-				c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded")
-			})
-
-			/*
-				// check the hash of a single block
-				e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
+	/*
+		// check the hash of a single block
+		e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
 	*/
 	if Data.Config.Server.Usessl == true {
 		log.Fatal(autotls.Run(e, Data.Config.Server.Urls...))

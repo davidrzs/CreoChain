@@ -30,3 +30,9 @@ We have a versioned API -> we are currently v1
 func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024
 }
+
+//AddBlock help us to püarse the JSON when we are adding a new block to the end of a chain.
+type AddBlock struct {
+	Data     string
+	Authcode string
+}

@@ -23,7 +23,7 @@ const (
 	yamlString = `
 database: keyvalue
 server:
-  authcodes: ["gs123","sadjksad"]
+  globalAuthcodes: ["gs123","sadjksad"]
   usessl: true
 `
 )

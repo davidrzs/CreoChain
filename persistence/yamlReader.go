@@ -6,10 +6,18 @@ import (
 
 //YAMLReader is used to unmarshal yaml file.
 type YAMLReader struct {
-	Database string
-	Server   struct {
-		Authcodes []string `yaml:",flow"`
-		Usessl    bool
+	Database struct {
+		Adapter  string
+		Host     string
+		Port     string
+		User     string
+		Password string
+		Dbname   string
+		Path     string
+	}
+	Server struct {
+		Globalauthcodes []string `yaml:",flow"`
+		Usessl          bool
 	}
 }
 

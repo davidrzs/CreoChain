@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -9,6 +10,7 @@ import (
 	"../chain"
 	"../globalvariables"
 	"../persistence"
+	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 )
 
@@ -110,5 +112,9 @@ func Serve(data *globalvariables.ServerManager, config *persistence.YAMLReader) 
 		// check the hash of a single block
 		e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
 	*/
-	e.Run(":8080")
+	if config.Server.Usessl == true {
+		log.Fatal(autotls.Run(e, config.Server.Urls...))
+	} else {
+		e.Run(":80")
+	}
 }

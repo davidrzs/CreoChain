@@ -17,6 +17,7 @@ type YAMLReader struct {
 	}
 	Server struct {
 		Globalauthcodes []string `yaml:",flow"`
+		Urls            []string `yaml:",flow"`
 		Usessl          bool
 	}
 }

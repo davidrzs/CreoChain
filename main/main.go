@@ -38,12 +38,10 @@ func main() {
 	dbType, dbString := globalvariables.DatabaseConnectionString(Config)
 	db := chain.DbSetup(dbType, dbString)
 	Data := &globalvariables.ServerManager{Mutex: &sync.Mutex{}, Name: "main dataset", Database: db}
-	fmt.Println(Data, Config)
-
-	fmt.Println(Config)
 	// end variable assignment and reading in from database
 
 	// begin debugging
+	fmt.Println(Data, Config)
 	fmt.Println("Up and running")
 	// end debugging
 
@@ -57,9 +55,9 @@ func main() {
 	signal.Notify(gracefulStop, syscall.SIGINT)
 	<-gracefulStop
 	fmt.Println("Recieved shutdown signal")
-	//db.Close() //remember to close it at the end of program execution
+	db.Close() //remember to close it at the end of program execution
 	fmt.Println("Closed Database")
-	time.Sleep(2 * time.Second)
+	time.Sleep(500 * time.Millisecond)
 	os.Exit(0)
 	//ending shutdown handling
 

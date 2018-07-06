@@ -5,9 +5,7 @@ import (
 	"crypto/sha256"
 	b64 "encoding/base64"
 	"fmt"
-	"runtime"
 	"strconv"
-	"strings"
 	"time"
 
 	"../globalvariables"
@@ -82,18 +80,22 @@ func RunChainTest() {
 
 }
 
-func CreateNewBlockchain(config *globalvariables.ServerManager, chainName string, accesstoken string) (bool, string) {
+func CreateNewBlockchain(config *globalvariables.ServerManager, chainName string, chainAccessToken string, globalAuthcode string) (bool, string) {
 	accessCorrect := true
 	errString := ""
 
 	genesisBlock := NewGenesisBlock()
-	fmt.Println("hellooo")
-	newChain := Chain{Name: chainName, AccessToken: accesstoken, Blocks: []Block{
+
+	hashedPassword, _ := HashPassword(chainAccessToken)
+	fmt.Print(hashedPassword)
+	// TODO: handle error above
+
+	newChain := Chain{Name: chainName, AccessToken: hashedPassword, Blocks: []Block{
 		*genesisBlock}}
 
-	if config.Config.Server.Globalauthcode != accesstoken {
-		fmt.Println(accesstoken)
-		fmt.Println(config.Config.Server.Globalauthcode)
+	if config.Config.Server.Globalauthcode != globalAuthcode {
+		// fmt.Println(accesstoken)
+		// fmt.Println(config.Config.Server.Globalauthcode)
 		accessCorrect = false
 		errString += "Access Token is not correct. Please supply the one you have in your config.yml file."
 		return accessCorrect, errString
@@ -120,14 +122,16 @@ func AddBlockToChain(db *gorm.DB, chainName string, authCode string, data string
 	}
 
 	//check if we are authorized to add a block
-	var trimmedAccessToken string
-	if runtime.GOOS == "windows" {
-		trimmedAccessToken = strings.TrimRight(authCode, "\r\n")
-	} else {
-		trimmedAccessToken = strings.TrimRight(authCode, "\n")
-	}
+	//var trimmedAccessToken string
+	// if runtime.GOOS == "windows" {
+	// 	trimmedAccessToken = strings.TrimRight(authCode, "\r\n")
+	// } else {
+	// 	trimmedAccessToken = strings.TrimRight(authCode, "\n")
+	// }
 
-	if bchain.AccessToken != trimmedAccessToken {
+	if !CheckPasswordHash(authCode, bchain.AccessToken) {
+		fmt.Println(bchain.AccessToken)
+		fmt.Println(authCode)
 		err = true
 		errString = "AccessToken for chain " + chainName + " isn't correct. "
 		return err, errString
@@ -156,6 +160,6 @@ func DbSetup(dbType string, connectionString string) *gorm.DB {
 		panic(err.Error())
 	}
 	db.AutoMigrate(&Chain{}, &Block{}, &Config{})                                          // make sure we've got the schema loaded
-	db.Model(&Block{}).AddForeignKey("chain_id", "chains(chain_id)", "CASCADE", "CASCADE") // add foregin key
+	db.Model(&Block{}).AddForeignKey("chain_id", "chains(chain_id)", "CASCADE", "CASCADE") // add foreign key
 	return db
 }

@@ -94,9 +94,9 @@ func Serve(Data *globalvariables.ServerManager) {
 		err1 := c.Bind(&ac)
 
 		if err1 == nil {
-			accessCorrect, err2 := chain.CreateNewBlockchain(Data, ac.Name, ac.Globalauthcode)
+			accessCorrect, err2 := chain.CreateNewBlockchain(Data, ac.Name, ac.ChainAccessToken, ac.Globalauthcode)
 			if accessCorrect == true {
-				c.String(http.StatusOK, "Block Added")
+				c.String(http.StatusOK, "Chain Added")
 			} else {
 				c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs"+err2)
 			}

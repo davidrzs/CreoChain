@@ -39,6 +39,7 @@ type AddBlock struct {
 
 //AddChain help us to parse the JSON when we are adding a new chain to our database.
 type AddChain struct {
-	Name           string
-	Globalauthcode string
+	Name             string
+	Globalauthcode   string
+	ChainAccessToken string
 }

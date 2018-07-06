@@ -31,8 +31,14 @@ func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024
 }
 
-//AddBlock help us to püarse the JSON when we are adding a new block to the end of a chain.
+//AddBlock help us to parse the JSON when we are adding a new block to the end of a chain.
 type AddBlock struct {
 	Data     string
 	Authcode string
+}
+
+//AddChain help us to parse the JSON when we are adding a new chain to our database.
+type AddChain struct {
+	Name           string
+	Globalauthcode string
 }

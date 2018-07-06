@@ -12,6 +12,7 @@ import (
 	"../chain"
 	"../globalvariables"
 	"../persistence"
+	"../server"
 )
 
 const (
@@ -40,14 +41,15 @@ func main() {
 	db := chain.DbSetup(dbType, dbString)
 	Data := &globalvariables.ServerManager{Mutex: &sync.Mutex{}, Name: "main dataset", Database: db, Config: config}
 	// end variable assignment and reading in from database
-	chain.CreateNewBlockchain(db, Data, "testmain", "auth")
+
 	// begin debugging
-	//fmt.Println(Data, Config)
 	fmt.Println("Up and running")
+	//chain.CreateNewBlockchain(Data, "othertest", "auth")
+	//chain.AddBlockToChain(Data.Database, "chain1", "aT", "this is some sd for is")
 	// end debugging
-	chain.AddBlockToChain(db, "chain1", "aT", "this is some data for is")
+
 	// begin server
-	//go server.Serve(Data, Config) // running it in another thread
+	server.Serve(Data) // running it in another thread
 	//end server
 
 	//beginning shutdown handling

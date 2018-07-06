@@ -82,8 +82,8 @@ func RunChainTest() {
 
 }
 
-func CreateNewBlockchain(db *gorm.DB, config *globalvariables.ServerManager, chainName string, accesstoken string) (bool, string) {
-	err := false
+func CreateNewBlockchain(config *globalvariables.ServerManager, chainName string, accesstoken string) (bool, string) {
+	accessCorrect := true
 	errString := ""
 
 	genesisBlock := NewGenesisBlock()
@@ -94,14 +94,14 @@ func CreateNewBlockchain(db *gorm.DB, config *globalvariables.ServerManager, cha
 	if config.Config.Server.Globalauthcode != accesstoken {
 		fmt.Println(accesstoken)
 		fmt.Println(config.Config.Server.Globalauthcode)
-		err = true
+		accessCorrect = false
 		errString += "Access Token is not correct. Please supply the one you have in your config.yml file."
-		return err, errString
+		return accessCorrect, errString
 	}
 
-	db.Create(&newChain)
+	config.Database.Create(&newChain)
 
-	return err, errString
+	return accessCorrect, errString
 }
 
 //AddBlockToChain adds a block to a blockchain by saving it correctly in the database.

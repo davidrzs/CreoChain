@@ -1,0 +1,11 @@
+server:
+  globalauthcodes: ["gs123","sadjksad"]
+  usessl: true
+database:
+  adapter: mysql
+  host: localhost
+  port: 1111
+  user: david
+  password: password
+  dbname: godb
+  path: ""

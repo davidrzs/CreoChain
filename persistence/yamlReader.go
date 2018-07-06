@@ -26,9 +26,6 @@ func ParseYAML(yamlS string) (*YAMLReader, error) {
 	yamlreader := YAMLReader{}
 
 	err := yaml.Unmarshal([]byte(yamlS), &yamlreader)
-	if err != nil {
-		return &yamlreader, err
-	}
 
-	return &yamlreader, nil
+	return &yamlreader, err
 }

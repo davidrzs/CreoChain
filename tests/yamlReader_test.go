@@ -12,11 +12,11 @@ database:
   host: localhost
   port: 1111
   user: david
-  password:  password
+  password:  passwordd
   dbname: godb
   path: "/kjasd/sd"
 server:
-  globalauthcodes: ["gs123","sadjksad"]
+  globalauthcodes: ["hello","sadjksad"]
   usessl: true
 `
 
@@ -29,7 +29,7 @@ func TestParseYAML(t *testing.T) {
 	if yS.Database.Adapter != "mysql" {
 		t.Error("Couldn't read database type")
 	}
-	if yS.Server.Globalauthcodes[0] != []string{"gs123", "sadjksad"}[0] || yS.Server.Globalauthcodes[1] != []string{"gs123", "sadjksad"}[1] {
+	if yS.Server.Globalauthcodes[0] != []string{"hello", "sadjksad"}[0] || yS.Server.Globalauthcodes[1] != []string{"hello", "sadjksad"}[1] {
 		t.Error("Couldn't read server authcodes type")
 	}
 	if yS.Server.Usessl != true {

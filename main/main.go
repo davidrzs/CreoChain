@@ -16,10 +16,7 @@ import (
 )
 
 const (
-	version            = "v0.1"
-	metaInfoBucketName = "metainfobucket"
-	chainBucketName    = "chainbucket"
-	databaseName       = "creoDB.db"
+	version = "V0.2"
 )
 
 func main() {
@@ -32,7 +29,7 @@ func main() {
 
 	config, err2 := persistence.ParseYAML(string(content))
 	if err2 != nil {
-		panic("couldn't parse contents of config.yaml: Error: " + err2.Error())
+		panic("Couldn't parse contents of config.yaml: Error: " + err2.Error())
 	}
 	fmt.Println("this is ", config.Server.Globalauthcode)
 

@@ -33,13 +33,14 @@ func main() {
 	if err2 != nil {
 		panic("couldn't parse contents of config.yaml: Error: " + err2.Error())
 	}
+	fmt.Println("this is ", config.Server.Globalauthcode)
 
 	// begin variable assignment and reading in from database
 	dbType, dbString := globalvariables.DatabaseConnectionString(config)
 	db := chain.DbSetup(dbType, dbString)
 	Data := &globalvariables.ServerManager{Mutex: &sync.Mutex{}, Name: "main dataset", Database: db, Config: config}
 	// end variable assignment and reading in from database
-	chain.CreateNewBlockchain(db, Data, "testmain", "jksad")
+	chain.CreateNewBlockchain(db, Data, "testmain", "auth")
 	// begin debugging
 	//fmt.Println(Data, Config)
 	fmt.Println("Up and running")

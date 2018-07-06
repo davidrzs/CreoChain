@@ -87,11 +87,13 @@ func CreateNewBlockchain(db *gorm.DB, config *globalvariables.ServerManager, cha
 	errString := ""
 
 	genesisBlock := NewGenesisBlock()
-
+	fmt.Println("hellooo")
 	newChain := Chain{Name: chainName, AccessToken: accesstoken, Blocks: []Block{
 		*genesisBlock}}
 
 	if config.Config.Server.Globalauthcode != accesstoken {
+		fmt.Println(accesstoken)
+		fmt.Println(config.Config.Server.Globalauthcode)
 		err = true
 		errString += "Access Token is not correct. Please supply the one you have in your config.yml file."
 		return err, errString

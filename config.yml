@@ -1,5 +1,5 @@
 server:
-  globalauthcodes: "sadjksad"
+  globalauthcode: "auth"
   usessl: true
 database:
   adapter: mysql

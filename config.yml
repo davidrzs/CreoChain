@@ -1,6 +1,6 @@
 server:
   globalauthcode: "auth"
-  usessl: true
+  usessl: false
 database:
   adapter: mysql
   host: localhost

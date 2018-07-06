@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"../globalvariables"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -22,12 +24,13 @@ type Chain struct {
 }
 
 type Block struct {
-	BlockID       int `gorm:"primary_key"`
-	Timestamp     int64
-	Data          string
-	PrevBlockHash string
-	Hash          string
-	ChainId       int
+	BlockID        int `gorm:"primary_key"`
+	IdInBlockchain int
+	Timestamp      int64
+	Data           string
+	PrevBlockHash  string
+	Hash           string
+	ChainId        int
 }
 
 type Config struct {
@@ -48,18 +51,18 @@ func GetHash(b *Block) string {
 }
 
 // NewBlock creates and returns Block
-func NewBlock(data string, prevBlockHash string) *Block {
-	block := &Block{Timestamp: time.Now().Unix(), Data: data, PrevBlockHash: prevBlockHash, Hash: ""}
+func NewBlock(data string, prevBlockHash string, previousBlockID int) *Block {
+	block := &Block{IdInBlockchain: previousBlockID + 1, Timestamp: time.Now().Unix(), Data: data, PrevBlockHash: prevBlockHash, Hash: ""}
 	block.setHash()
 	return block
 }
 
 // NewGenesisBlock creates and returns genesis Block
 func NewGenesisBlock() *Block {
-	return NewBlock("Genesis Block", "")
+	return NewBlock("Genesis Block", "", -1)
 }
 
-func runChainTest() {
+func RunChainTest() {
 
 	db := DbSetup("mysql", "david:password@/godb?charset=utf8&parseTime=True&loc=Local")
 	defer db.Close()
@@ -77,6 +80,26 @@ func runChainTest() {
 
 	fmt.Println("bchain", bchain.ChainID)
 
+}
+
+func CreateNewBlockchain(db *gorm.DB, config *globalvariables.ServerManager, chainName string, accesstoken string) (bool, string) {
+	err := false
+	errString := ""
+
+	genesisBlock := NewGenesisBlock()
+
+	newChain := Chain{Name: chainName, AccessToken: accesstoken, Blocks: []Block{
+		*genesisBlock}}
+
+	if config.Config.Server.Globalauthcode != accesstoken {
+		err = true
+		errString += "Access Token is not correct. Please supply the one you have in your config.yml file."
+		return err, errString
+	}
+
+	db.Create(&newChain)
+
+	return err, errString
 }
 
 //AddBlockToChain adds a block to a blockchain by saving it correctly in the database.
@@ -110,10 +133,12 @@ func AddBlockToChain(db *gorm.DB, chainName string, authCode string, data string
 
 	//creating the block
 	bchainBlocks := &[]Block{}
-	db.Model(&bchain).Association("Blocks").Find(bchainBlocks)
-	fmt.Println(bchainBlocks)
+	db.Where("chain_id = ?", bchain.ChainID).Find(bchainBlocks).Order("chain_id asc")
+	//db.Model(&bchain).Association("Blocks").Find(bchainBlocks).Order("age desc")
+	//fmt.Println(bchainBlocks)
 	prevBlockHash := (*bchainBlocks)[len(*bchainBlocks)-1].Hash
-	blockToAdd := NewBlock(data, prevBlockHash)
+	prevBlockID := (*bchainBlocks)[len(*bchainBlocks)-1].IdInBlockchain
+	blockToAdd := NewBlock(data, prevBlockHash, prevBlockID)
 	blockToAdd.setHash()
 
 	//add it to the database

@@ -16,6 +16,7 @@ type ServerManager struct {
 	Mutex    *sync.Mutex
 	Name     string
 	Database *gorm.DB
+	Config   *persistence.YAMLReader
 }
 
 func DatabaseConnectionString(config *persistence.YAMLReader) (string, string) {

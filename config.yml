@@ -1,5 +1,5 @@
 server:
-  globalauthcodes: ["gs123","sadjksad"]
+  globalauthcodes: "sadjksad"
   usessl: true
 database:
   adapter: mysql

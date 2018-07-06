@@ -16,9 +16,9 @@ type YAMLReader struct {
 		Path     string
 	}
 	Server struct {
-		Globalauthcodes []string `yaml:",flow"`
-		Urls            []string `yaml:",flow"`
-		Usessl          bool
+		Globalauthcode string
+		Urls           []string `yaml:",flow"`
+		Usessl         bool
 	}
 }
 

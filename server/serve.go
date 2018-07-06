@@ -57,37 +57,11 @@ func Serve(Data *globalvariables.ServerManager) {
 			}
 		}
 	})
-	/*
-		// recalculate all hashes in a chain and verify if they match the ones stored
-		e.GET("/v1/chain/:chainname/checkchainhashes", func(c *gin.Context) {
-			data.Mutex.Lock()
-			defer data.Mutex.Unlock()
 
-			bchain, isPresent := data.BlockChains[c.Param("chainname")]
-			if !isPresent {
-				c.String(http.StatusNotFound, "Error 404. The chain you wanted to retrieve doesn't exist.")
-			}
-			discrepancy := false
-			discrepancyid := 0
-			for idx, block := range bchain.Blocks {
-				fmt.Println(block)
-				origHash := block.Hash
-				newHash := chain.GetHash(block)
-				currentDiscrepancy := newHash == origHash
-				if currentDiscrepancy == true {
-					discrepancyid = idx
-					discrepancy = true
-				}
-			}
-			ret := &HashResult{HashesOk: !discrepancy, DiscrepancyID: discrepancyid}
-			c.JSON(http.StatusOK, ret)
-		})
-	*/
 	// add a single block to the end of a blockchain
-	e.POST("/v1/chain/:chainname/new", func(c *gin.Context) {
+	e.POST("/v1/chain/:chainname/", func(c *gin.Context) {
 		Data.Mutex.Lock()
-		defer Data.Mutex.Unlock()
-		bblock := chain.Block{}
+		defer Data.Mutex.Unlock() //this function can definitely be cleaned up a bit more
 		bchain := chain.Chain{}
 		if Data.Database.Where("name = ?", c.Param("chainname")).First(&bchain).RecordNotFound() {
 			c.String(http.StatusNotFound, "Error 404. The chain you wanted to add a block to doesn't exist.")
@@ -102,7 +76,7 @@ func Serve(Data *globalvariables.ServerManager) {
 					c.String(http.StatusOK, "Block Added")
 				} else {
 					// so authorization probably failed
-					c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs")
+					c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs"+errString)
 				}
 			} else {
 				c.String(http.StatusInternalServerError, err1.Error())
@@ -111,10 +85,27 @@ func Serve(Data *globalvariables.ServerManager) {
 
 	})
 
-	/*
-		// check the hash of a single block
-		e.POST("/v1/chain/:chainid/checkblockhash", checkBlockHash)
-	*/
+	e.POST("/v1/chain/", func(c *gin.Context) {
+		Data.Mutex.Lock()
+		defer Data.Mutex.Unlock() //this function can definitely be cleaned up a bit more
+
+		//reading in data
+		ac := AddChain{}
+		err1 := c.Bind(&ac)
+
+		if err1 == nil {
+			accessCorrect, err2 := chain.CreateNewBlockchain(Data, ac.Name, ac.Globalauthcode)
+			if accessCorrect == true {
+				c.String(http.StatusOK, "Block Added")
+			} else {
+				c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs"+err2)
+			}
+		} else {
+			c.String(http.StatusInternalServerError, err1.Error())
+		}
+
+	})
+
 	if Data.Config.Server.Usessl == true {
 		log.Fatal(autotls.Run(e, Data.Config.Server.Urls...))
 	} else {

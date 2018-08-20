@@ -8,7 +8,7 @@ permalink:        pretty
 # Setup
 title:            CreoChain
 tagline:          'An easy to use non distributed blockchain server'
-description:      'A blockchain designed to be easily customizable and simple to use for a wide variety of use cases. Made with love by <a href="https://github.com/davidrzs/" target="_blank">davidrzs</a>.'
+description:      'An experimental, non-distributed, easily configurable blockchain server with guaranteed data integrity. Made with love by <a href="https://github.com/davidrzs/" target="_blank">davidrzs</a>.'
 url:              https://davidrzs.github.io/
 baseurl:          "/CreoChain/"
 

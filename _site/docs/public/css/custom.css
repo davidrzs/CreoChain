@@ -1,0 +1,11 @@
+.subtitle {
+    color: grey;
+    margin-top: 0mm;
+    padding-top: 0mm;
+    font-size: 130%;
+}
+
+.hasSubtitle {
+margin-bottom: 0mm;
+font-size: 270%;
+}

@@ -1,0 +1,12 @@
+server:
+  globalauthcode: "auth"
+  usessl: false
+database:
+  adapter: sqlite
+  path: "./main.db"
+  # host: localhost
+  # port: 1111
+  # user: david
+  # password: password
+  # dbname: godb
+  # path: ""

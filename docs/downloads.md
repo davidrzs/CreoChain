@@ -25,4 +25,4 @@ Please visit the Getting Started section to get started with CreoChain.
 
 ## Older Versions
 
-Older versions of CreoChain can still be obtained on the CreoChain github page.
+Older versions of CreoChain can still be obtained on the CreoChain GitHub page.

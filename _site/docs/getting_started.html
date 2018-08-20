@@ -1,0 +1,58 @@
+<p class="message">
+  Thank you for your interest. This project is still at a very early stage. It is intended for personal use and should NEVER be used where security is your primary concern.
+</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Let’s assume we live in a kleptocracy where you cannot be sure whether the land you have bought 20 years ago is still registered on your name or if some corrupt politician has changed the official record and claimed your land.</p>
+
+<p>Nowadays, we just trust our governments to not tamper with our record; this is fine for now but it raises the questions if there isn’t a better solution to our problem. What if there exists a method writing something down, that cannot be changed in the future? Using CreoChain we can do just that.</p>
+
+<p>But enough hypothetical writing, let’s get started:</p>
+
+<h2 id="installing-creochain-on-a-server">Installing CreoChain on a server</h2>
+
+<p>Go to the downloads section of this website (can be found in the sidebar on the left). Download the version that fits your computer architecture and operating system.</p>
+
+<p>Place the executable in a folder, on Linux this could be <code class="highlighter-rouge">/var/www/creochain</code>. For MacOS and Windows just ensure that you place the executable in a folder named <code class="highlighter-rouge">/creochain</code></p>
+
+<p>We now need to add a configuration file, where the server will be able to read all the settings it needs.
+Within <code class="highlighter-rouge">/creochain</code> create a new file called <code class="highlighter-rouge">config.yml</code>. This will be a <code class="highlighter-rouge">yaml</code> file.</p>
+
+<p>Open the <code class="highlighter-rouge">config.yml</code> file in a text editor of your choice (Notepad++, Notepad, Atom, Sublime etc.) and start to add your configuration in <code class="highlighter-rouge">yaml</code> format. Keep in mind that <code class="highlighter-rouge">yaml</code> doesn’t support tabs but only supports spaces, if you do use tabs you risk that the server will not be able to parse your configuration.</p>
+
+<p>An example <code class="highlighter-rouge">config.yml</code> file can be seen below:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">server</span><span class="pi">:</span>
+  <span class="na">globalauthcode</span><span class="pi">:</span> <span class="s2">"</span><span class="s">auth"</span>
+  <span class="na">usessl</span><span class="pi">:</span> <span class="no">false</span>
+<span class="na">database</span><span class="pi">:</span>
+  <span class="na">adapter</span><span class="pi">:</span> <span class="s">sqlite</span>
+  <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">./main.db"</span>
+</code></pre></div></div>
+<p>This configuration file will start the server with the global authcode “auth” (more on this later), will not use SSL and will have an SQLite backend where the database is located in the same directory at <code class="highlighter-rouge">main.db</code></p>
+
+<h2 id="compiling-creochain-on-your-own">Compiling CreoChain on your own.</h2>
+
+<p>It is reccomended that you use a linux server for this.</p>
+
+<p>First you need to install Go’s dependency management tool called <code class="highlighter-rouge">dep</code>.</p>
+
+<p>You can install it on your machine by executing the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+</code></pre></div></div>
+
+<p>After it has succeeded, clone the CreoChain repository onto your computer.
+You can use the following Git URL: <a href="https://github.com/davidrzs/CreoChain.git">https://github.com/davidrzs/CreoChain.git</a></p>
+
+<p>Now <code class="highlighter-rouge">cd</code> into the <code class="highlighter-rouge">CreoChain</code> directory that you have just downloaded and run <code class="highlighter-rouge">dep ensure</code> in order to get all the necessary dependencies onto your computer. If something goes wrong with the SQLite dependency its probably because
+you do not have a 64-bit GCC compiler.</p>
+
+<p>To build the project just type:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go build main/main.go
+</code></pre></div></div>
+
+<p>Et voilà, you now have a working CreoChain executable.</p>
+
+<h2 id="auth-tokens-and-database-administration">Auth Tokens and Database Administration</h2>

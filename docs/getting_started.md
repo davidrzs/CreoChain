@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Getting Sarted
+title: Getting Started
 subtitle: Building a blockchain based land registry.
 ---
 
@@ -64,3 +64,8 @@ go build main/main.go
 ```
 
 Et voilà, you now have a working CreoChain executable.
+
+
+## Auth Tokens and Database Administration
+
+COMING SOON

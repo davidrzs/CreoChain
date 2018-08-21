@@ -29,7 +29,7 @@ If you want to check the integrity of the data you can either let the sever chec
 
 ## Notes on the state of this project
 
-This software is not production ready, it's mainly a project to investigate whether the concept of storing data in a non distributed blockchain is viable. If it is, a more thorough and supported version will be released, if not the project will stay in non production ready.
+This software is not production ready, it's mainly a project to investigate whether the concept of storing data in a non distributed blockchain is viable. If it is, a more thorough and supported version will be released, if not, the project will stay in non production ready.
 
 
 ## Copying, Forking, Copy-Pasting &amp; Enhancing

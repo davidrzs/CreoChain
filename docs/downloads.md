@@ -10,18 +10,18 @@ Please visit the Getting Started section to get started with CreoChain.
 
 ### Windows
 
-* 32-bit Version
-* 64-bit Version
+* [32-bit Version]()
+* [64-bit Version]()
 
 ### Linux
 
-* 32-bit Version
-* 64-bit Version
+* [32-bit Version]()
+* [64-bit Version]()
 
 ### MacOS
 
-* 32-bit Version
-* 64-bit Version
+* [32-bit Version]()
+* [64-bit Version]()
 
 ## Older Versions
 

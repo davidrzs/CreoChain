@@ -14,8 +14,8 @@ import (
 
 // Serve fires up the server.
 func Serve(Data *globalvariables.ServerManager) {
+	gin.SetMode(gin.ReleaseMode)
 	e := gin.Default()
-
 	var m runtime.MemStats
 	e.GET("/", func(c *gin.Context) {
 		runtime.ReadMemStats(&m)

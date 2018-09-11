@@ -68,4 +68,75 @@ Et voilà, you now have a working CreoChain executable.
 
 ## Auth Tokens and Database Administration
 
-COMING SOON
+Database support for mySQL and SQLite is built into CreoChain. mySQL is expreimental only and should be used with caution, SQLite should work just fine.
+In order to use SQLite create an emtpy file in the directory where the CreoChain executable will be executed and give it a name. You then have to tell CreoChain in the `config.yml` that you want to use that file as your database file.
+
+In order to perform administrative work on your CreoChain server you need a masterpassword. Please choose a very secure password (e.g. at [https://passwordsgenerator.net/](https://passwordsgenerator.net/)) and place it in the `config.yml` file under `globalauthcode`.
+
+
+# Programming the Example
+
+We can now come back to our example. First we will start our CreoChain server by executing the executable. If you don't get any errors you are good to go. (You might be getting a `(near "CONSTRAINT": syntax error)` error, you can ignore it, it will be fixed in the future).
+
+We will now take a look at the different operations CreoChain supports.
+
+As a quick side note: CreoChain uses a versioned API, currently we are on v1, so all URLs will be prefixed with `/v1/`.
+
+#### Creating a new Blochckain
+
+If you want to create a new blockchain send a post request to `http://yourdomain:8080/v1/chain/` with the following JSON payload:
+
+```json
+{
+	"name": "",
+	"globalauthcode": "",
+	"chainAccessToken": ""
+}
+```
+
+- **name** is the name of the blockchain you are creating
+- **globalauthcode** is the global authorization code you have specified in the `config.yaml` above.
+- **chainAccessToken** is the authorization code which allows you to manipulate this blockchain (e.g. add blocks)
+
+#### Adding a Block to a Blochckain
+
+To add a block to a blockchain send a post request to `http://yourdomain:8080/v1/chain/chainname/`, where `chainname` is the name of the blockchain you have created in the previous step. Send it with the following JSON payload:
+
+```json
+{
+	"data": "",
+	"authcode": ""
+}
+```
+
+- **data** the data you are storing in the blockchain. This can be anything, from binary, to JSON, literally anything. Just make sure you supply it as a string since it is stored as a string in the database.
+- **authcode** is the chains chainAccessToken you have defined above, it is used to validate whether you are allowed to add blocks or not.
+
+
+#### Getting a Copy of the Whole Blockchain
+
+To see the whole blockchain send a get request to `http://yourdomain:8080/v1/chain/chainname/`, where `chainname` is the name of the blockchain. No JSON payload is required. 
+
+This request will return a long JSON string with all blocks and a lot of other useful data on your blockchain.
+
+
+#### Getting a Sinlge Block of Blockchain (experimental)
+
+To see a single block of the blockchain send a get request to `http://yourdomain:8080/v1/chain/chainname/block/blockid`, where `chainname` is the name of the blockchain and `blockid` is the id-number of the block in the blockchain. No JSON payload is required. 
+
+This request will return a JSON string with your block.
+
+# Checking the correctness of the Blockchain
+
+(More info will be added later)
+
+Currently, in order to check correctness of your blockchain you can recalculate all the hashes with the following piece of Golang code. A simpler way of rechecking all the hashes will be supplied in the future.
+
+``` go
+func GetHash(b *Block) string {
+	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
+	headers := bytes.Join([][]byte{[]byte(b.PrevBlockHash), []byte(b.Data), timestamp}, []byte{})
+	hash := sha256.Sum256(headers)
+	return b64.StdEncoding.EncodeToString(hash[:])
+}
+```

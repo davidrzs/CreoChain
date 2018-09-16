@@ -3,7 +3,7 @@ server:
   usessl: false
 database:
   adapter: sqlite
-  path: "./main.db"
+  path: "./main2.db"
   # host: localhost
   # port: 1111
   # user: david

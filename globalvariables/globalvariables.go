@@ -17,6 +17,7 @@ type ServerManager struct {
 	Config   *persistence.YAMLReader
 }
 
+// DatabaseConnectionString takes in a string specifying the type of database we are trying to connect to and returns a connection string which can be attached to a URL to connect to a database.
 func DatabaseConnectionString(config *persistence.YAMLReader) (string, string) {
 	if config.Database.Adapter == "mysql" {
 		return "mysql", config.Database.User + ":" + config.Database.Password + "@/" + config.Database.Dbname + "?charset=utf8&parseTime=True&loc=Local"

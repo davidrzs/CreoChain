@@ -16,11 +16,11 @@ import (
 )
 
 const (
-	version = "V0.2"
+	version = "V0.3"
 )
 
 func main() {
-	//read config yaml
+	// reading configuration from external yaml file
 	content, err1 := ioutil.ReadFile("config.yml")
 	if err1 != nil {
 		fmt.Println("couldn't read config.yaml: \n Error: ")
@@ -31,6 +31,7 @@ func main() {
 	if err2 != nil {
 		panic("Couldn't parse contents of config.yaml: Error: " + err2.Error())
 	}
+
 	fmt.Println("this is ", config.Server.Globalauthcode)
 
 	// begin variable assignment and reading in from database

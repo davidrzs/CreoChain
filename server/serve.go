@@ -98,7 +98,7 @@ func Serve(Data *globalvariables.ServerManager) {
 			if accessCorrect == true {
 				c.String(http.StatusOK, "Chain Added")
 			} else {
-				c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs"+err2)
+				c.String(http.StatusUnauthorized, "Your authentication token was wrong. No write permission granted. The block could not be addded \n If this is not the problem, there might be something wrong with the database. Check the logs "+err2)
 			}
 		} else {
 			c.String(http.StatusInternalServerError, err1.Error())

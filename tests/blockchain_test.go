@@ -1,5 +1,15 @@
 package tests
 
+import "testing"
+
+func Test(b *testing.B) {
+	big := NewBig()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		big.Len()
+	}
+}
+
 // var yamlString = `
 // database: memory
 // server:
